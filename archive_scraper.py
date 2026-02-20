@@ -41,7 +41,7 @@ def get_arxiv_documents():
     params = {
         'search_query': query,
         'start': 0,
-        'max_results': 100,
+        'max_results': 50,
         'sortBy': 'relevance',
         'sortOrder': 'descending'
     }

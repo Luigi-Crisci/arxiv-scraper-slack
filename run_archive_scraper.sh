@@ -1,3 +1,4 @@
-source $PWD/.venv/bin/activate
-source $PWD/secrets.sh
-python3 $PWD/archive_scraper.py
+DIR=/home/luigi-ph3/arxiv-scraper-slack/
+source $DIR/.venv/bin/activate
+source $DIR/secrets.sh
+python3 $DIR/archive_scraper.py
