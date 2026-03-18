@@ -1,7 +1,6 @@
 import os
 import time
 from slack_bolt import App
-from slack_bolt.adapter.socket_mode import SocketModeHandler
 import urllib.request
 import urllib.parse
 import xml.etree.ElementTree as ET
@@ -11,7 +10,7 @@ app = App(token=os.environ.get("SLACK_BOT_TOKEN"))
 def get_channel_id_by_name(name):
     """Fetch the channel ID from the name via API"""
     try:
-        for result in app.client.conversations_list(types="private_channel"):
+        for result in app.client.conversations_list(types="public_channel"):
             for channel in result["channels"]:
                 if channel["name"] == name:
                     return channel["id"]
