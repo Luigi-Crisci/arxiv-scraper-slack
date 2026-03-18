@@ -23,11 +23,19 @@ def get_arxiv_documents():
     BASE_URL = 'http://export.arxiv.org/api/query?'
     KEYWORDS = [
         'quantum computing',
-        "superconducting",
+        #"superconducting",
         "quantum annealing",
-        "quanrum resevoir",
+        "quantum resevoir",
         "QPU",
-        "Analog Computing"] # Add more keywords as needed 
+        'fluxonium',
+        "Analog Computing",
+        'analog quantum',
+        'cross-talk',
+        'crosstalk',
+        'cross talk',
+        'quantum advantage',
+        'flip-chip'
+        ] # Add more keywords as needed 
 
     # Format: YYYYMMDDHHMM
     DAYS_TO_CHECK = 1
@@ -36,8 +44,11 @@ def get_arxiv_documents():
 
     print(start_date)
     
-    query_keywords = ' OR '.join([f'all:{kw}' for kw in KEYWORDS])
-    query = f'({query_keywords}) AND submittedDate:[{start_date} TO {end_date}]'
+    #query_keywords = ' OR '.join([f'all:{kw}' for kw in KEYWORDS])
+    query_keywords = " OR ".join([f'all:"{kw}"' for kw in KEYWORDS])
+    # query = f'({query_keywords}) AND submittedDate:[{start_date} TO {end_date}]'
+    query = f'(({query_keywords}) AND (cat:quant-ph OR cat:cond-mat.supr-con)) AND submittedDate:[{start_date} TO {end_date}]'
+
     params = {
         'search_query': query,
         'start': 0,
@@ -67,6 +78,13 @@ def get_arxiv_documents():
             for entry in entries:
                 title = entry.find('atom:title', ns).text.strip().replace('\n', ' ')
                 link = entry.find('atom:id', ns).text
+                
+                categories = entry.findall('atom:category', ns) 
+                subjects = [cat.attrib.get("term", "") for cat in categories]
+                allowed = {"quant-ph", "cond-mat.supr-con"}
+                if not any(cat in allowed for cat in subjects):
+                    continue
+
                 author_elements = entry.findall('atom:author', ns)
                 authors = []
                 for auth in author_elements:
